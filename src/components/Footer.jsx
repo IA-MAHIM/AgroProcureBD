@@ -68,8 +68,7 @@ export default function Footer({ t }) {
 
         <div className="footer-bottom">
           <p>
-            © {year} AgroProcureBD. All rights reserved. Built for CSC 470
-            Software Engineering Project.
+            © {year} AgroProcureBD. All rights reserved.
           </p>
         </div>
       </div>
