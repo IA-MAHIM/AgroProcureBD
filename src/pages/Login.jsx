@@ -1,109 +1,99 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sprout, ShoppingBasket, Landmark, ShieldCheck } from 'lucide-react'
-
-function dashboardPath(role) {
-  if (role === 'farmer') return '/farmer'
-  if (role === 'buyer') return '/buyer'
-  if (role === 'government') return '/government'
-  if (role === 'admin') return '/admin'
-  return '/'
-}
+import { apiRequest } from '../services/api'
 
 export default function Login({ t, setUser }) {
-  const [role, setRole] = useState('farmer')
-  const [email, setEmail] = useState('')
   const navigate = useNavigate()
+  const text = t || {}
 
-  const roleOptions = [
-    { value: 'farmer', label: t.farmerLogin, icon: Sprout },
-    { value: 'buyer', label: t.buyerLogin, icon: ShoppingBasket },
-    { value: 'government', label: t.govtLogin, icon: Landmark },
-  ]
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    role: 'buyer'
+  })
 
-  const submitLogin = (e) => {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const user = { name: email, email, role }
-    localStorage.setItem('agro-user', JSON.stringify(user))
-    setUser(user)
-    navigate(dashboardPath(role))
+    setLoading(true)
+    setError('')
+
+    try {
+      const data = await apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(form)
+      })
+
+      localStorage.setItem('agro-token', data.token)
+      localStorage.setItem('agro-user', JSON.stringify(data.user))
+
+      if (typeof setUser === 'function') {
+        setUser(data.user)
+      }
+
+      if (data.user.role === 'farmer') {
+        navigate('/farmer')
+      } else if (data.user.role === 'buyer') {
+        navigate('/buyer')
+      } else if (data.user.role === 'government') {
+        navigate('/government')
+      } else {
+        navigate('/')
+      }
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <section className="container section">
       <div className="form-card narrow">
-        <p className="eyebrow">{t.login}</p>
-        <h1>{t.loginTitle}</h1>
-        <p>{t.loginText}</p>
+        <p className="eyebrow">{text.login || 'Login'}</p>
+        <h1>{text.loginTitle || 'Login to your account'}</h1>
 
-        <form onSubmit={submitLogin}>
-          <label>{t.accountType}</label>
-          <div className="role-select">
-            {roleOptions.map(({ value, label, icon: Icon }) => (
-              <button
-                key={value}
-                type="button"
-                className={role === value ? 'role-option active' : 'role-option'}
-                onClick={() => setRole(value)}
-              >
-                <Icon size={20} />
-                <span>{label}</span>
-              </button>
-            ))}
-          </div>
+        {error && <p className="error-text">{error}</p>}
 
-          <label>{t.email}</label>
+        <form onSubmit={handleSubmit}>
+          <label>{text.role || 'Account Type'}</label>
+          <select name="role" value={form.role} onChange={handleChange}>
+            <option value="buyer">{text.buyer || 'Buyer'}</option>
+            <option value="farmer">{text.farmer || 'Farmer'}</option>
+            <option value="government">
+              {text.govtOfficer || 'Government Officer'}
+            </option>
+          </select>
+
+          <label>{text.email || 'Email'}</label>
           <input
-            required
+            name="email"
             type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="name@example.com"
+            value={form.email}
+            onChange={handleChange}
+            required
           />
 
-          <label>{t.password}</label>
-          <input required type="password" placeholder="********" />
-
-          <button className="primary-btn full" type="submit">{t.login}</button>
-        </form>
-      </div>
-    </section>
-  )
-}
-
-export function AdminLogin({ t, setUser }) {
-  const [email, setEmail] = useState('')
-  const navigate = useNavigate()
-
-  const submitLogin = (e) => {
-    e.preventDefault()
-    const user = { name: email, email, role: 'admin' }
-    localStorage.setItem('agro-user', JSON.stringify(user))
-    setUser(user)
-    navigate('/admin')
-  }
-
-  return (
-    <section className="container section">
-      <div className="form-card narrow">
-        <p className="eyebrow">{t.admin}</p>
-        <h1>{t.adminLogin}</h1>
-
-        <form onSubmit={submitLogin}>
-          <label>{t.email}</label>
+          <label>{text.password || 'Password'}</label>
           <input
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
             required
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="admin@agroprocurebd.com"
           />
 
-          <label>{t.password}</label>
-          <input required type="password" placeholder="********" />
-
-          <button className="primary-btn full" type="submit">
-            <ShieldCheck size={18} /> {t.login}
+          <button className="primary-btn full" disabled={loading}>
+            {loading ? 'Loading...' : text.login || 'Login'}
           </button>
         </form>
       </div>
