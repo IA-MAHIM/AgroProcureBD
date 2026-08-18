@@ -83,7 +83,7 @@ function Register({ t }) {
       })
 
       localStorage.setItem('pending-otp-email', form.email)
-window.location.href = '/otp'
+navigate('/otp', { replace: true })
     } catch (err) {
       setError(err.message || 'Registration failed')
     } finally {
