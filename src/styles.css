@@ -643,4 +643,23 @@ th {
   .section {
     padding: 34px 0;
   }
+  .error-text {
+  background: #fee2e2;
+  color: #991b1b !important;
+  border: 1px solid #fecaca;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.success-text {
+  background: #dcfce7;
+  color: #166534 !important;
+  border: 1px solid #bbf7d0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
 }
