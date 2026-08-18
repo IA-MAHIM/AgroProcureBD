@@ -1,14 +1,12 @@
 {
-  "name": "agroprocurebd-phase-1-7",
+  "name": "agroprocurebd-frontend",
   "private": true,
   "version": "1.0.0",
-  "description": "AgroProcureBD React frontend up to Phase 7: public site, authentication UI, profiles, farmer, buyer, government procurement and bidding modules.",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint": "echo \"Linting can be added later\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

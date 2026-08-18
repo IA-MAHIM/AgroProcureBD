@@ -1,26 +1,22 @@
-import PageHeader from "../components/PageHeader.jsx";
-import FormField from "../components/FormField.jsx";
-
-export default function Contact() {
+export default function Contact({ t }) {
   return (
-    <>
-      <PageHeader
-        title="Contact Us"
-        subtitle="Send feedback, project questions or support requests."
-        image="/images/reports-preview.svg"
-      />
-      <section className="section">
-        <div className="form-panel">
-          <h2>Send Message</h2>
-          <div className="form-grid">
-            <FormField label="Full Name" placeholder="Enter your name" />
-            <FormField label="Email" type="email" placeholder="Enter your email" />
-          </div>
-          <FormField label="Subject" placeholder="Message subject" />
-          <FormField label="Message" as="textarea" placeholder="Write your message" />
-          <button className="btn btn-primary">Submit Message</button>
-        </div>
-      </section>
-    </>
-  );
+    <section className="container section">
+      <div className="form-card narrow">
+        <p className="eyebrow">{t.contact}</p>
+        <h1>{t.contact}</h1>
+        <p>{t.contactText}</p>
+
+        <label>{t.fullName}</label>
+        <input placeholder={t.fullName} />
+
+        <label>{t.email}</label>
+        <input placeholder={t.email} />
+
+        <label>Message</label>
+        <textarea rows="5" placeholder="Write your message" />
+
+        <button className="primary-btn full">{t.submit}</button>
+      </div>
+    </section>
+  )
 }

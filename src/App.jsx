@@ -1,96 +1,97 @@
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx";
-import Footer from "./components/Footer.jsx";
-import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
-import Contact from "./pages/Contact.jsx";
-import FAQ from "./pages/FAQ.jsx";
-import Terms from "./pages/Terms.jsx";
-import Privacy from "./pages/Privacy.jsx";
-import Products from "./pages/Products.jsx";
-import ProductDetails from "./pages/ProductDetails.jsx";
-import Categories from "./pages/Categories.jsx";
-import ProcurementNotices from "./pages/ProcurementNotices.jsx";
-import Login from "./pages/Login.jsx";
-import RegisterBuyer from "./pages/RegisterBuyer.jsx";
-import RegisterFarmer from "./pages/RegisterFarmer.jsx";
-import RegisterOfficer from "./pages/RegisterOfficer.jsx";
-import OtpVerification from "./pages/OtpVerification.jsx";
-import ForgotPassword from "./pages/ForgotPassword.jsx";
-import ResetPassword from "./pages/ResetPassword.jsx";
-import ChangePassword from "./pages/ChangePassword.jsx";
-import ProfileHub from "./pages/ProfileHub.jsx";
-import FarmerDashboard from "./pages/FarmerDashboard.jsx";
-import FarmerProducts from "./pages/FarmerProducts.jsx";
-import FarmerOrders from "./pages/FarmerOrders.jsx";
-import FarmerSalesHistory from "./pages/FarmerSalesHistory.jsx";
-import BuyerDashboard from "./pages/BuyerDashboard.jsx";
-import Cart from "./pages/Cart.jsx";
-import Checkout from "./pages/Checkout.jsx";
-import BuyerOrders from "./pages/BuyerOrders.jsx";
-import GovernmentDashboard from "./pages/GovernmentDashboard.jsx";
-import ProcurementCreate from "./pages/ProcurementCreate.jsx";
-import ProcurementManage from "./pages/ProcurementManage.jsx";
-import ProcurementOffers from "./pages/ProcurementOffers.jsx";
-import BiddingList from "./pages/BiddingList.jsx";
-import SubmitBid from "./pages/SubmitBid.jsx";
-import BidHistory from "./pages/BidHistory.jsx";
-import AdminVerificationRequests from "./pages/AdminVerificationRequests.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import { translations } from './i18n'
+import Home from './pages/Home'
+import Products from './pages/Products'
+import HowItWorks from './pages/HowItWorks'
+import Procurement from './pages/Procurement'
+import Contact from './pages/Contact'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import Otp from './pages/Otp'
+import {
+  FarmerDashboard,
+  BuyerDashboard,
+  GovernmentDashboard,
+  AdminDashboard,
+  AddProduct,
+  FarmerBids,
+  SimpleFormPage,
+  Checkout
+} from './pages/Dashboard'
+
+function Protected({ user, role, children }) {
+  if (!user) return <Navigate to="/login" replace />
+  if (role && user.role !== role) return <Navigate to="/" replace />
+  return children
+}
 
 export default function App() {
+  const [lang, setLang] = useState(() => localStorage.getItem('agro-lang') || 'bn')
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('agro-theme') === 'dark')
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('agro-user')) || null
+    } catch {
+      return null
+    }
+  })
+
+  const t = useMemo(() => translations[lang], [lang])
+
+  useEffect(() => {
+    localStorage.setItem('agro-lang', lang)
+    document.documentElement.lang = lang
+  }, [lang])
+
+  useEffect(() => {
+    localStorage.setItem('agro-theme', darkMode ? 'dark' : 'light')
+    document.body.classList.toggle('dark-mode', darkMode)
+  }, [darkMode])
+
   return (
-    <>
-      <Navbar />
-      <main className="site-main">
+    <div className="app">
+      <Header
+        t={t}
+        lang={lang}
+        setLang={setLang}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+        user={user}
+        setUser={setUser}
+      />
+
+      <main>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/procurements" element={<ProcurementNotices />} />
+          <Route path="/" element={<Home t={t} />} />
+          <Route path="/products" element={<Products t={t} lang={lang} />} />
+          <Route path="/how-it-works" element={<HowItWorks t={t} />} />
+          <Route path="/procurement" element={<Procurement t={t} lang={lang} />} />
+          <Route path="/contact" element={<Contact t={t} />} />
+          <Route path="/register" element={<Register t={t} />} />
+          <Route path="/login" element={<Login t={t} setUser={setUser} />} />
+          <Route path="/otp" element={<Otp t={t} />} />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register/buyer" element={<RegisterBuyer />} />
-          <Route path="/register/farmer" element={<RegisterFarmer />} />
-          <Route path="/register/government-officer" element={<RegisterOfficer />} />
-          <Route path="/otp-verification" element={<OtpVerification />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/farmer" element={<Protected user={user} role="farmer"><FarmerDashboard t={t} lang={lang} /></Protected>} />
+          <Route path="/farmer/add-product" element={<Protected user={user} role="farmer"><AddProduct t={t} /></Protected>} />
+          <Route path="/farmer/bids" element={<Protected user={user} role="farmer"><FarmerBids t={t} /></Protected>} />
 
-          <Route path="/profiles" element={<ProfileHub />} />
+          <Route path="/buyer" element={<Protected user={user} role="buyer"><BuyerDashboard t={t} lang={lang} /></Protected>} />
+          <Route path="/checkout" element={<Protected user={user}><Checkout t={t} /></Protected>} />
 
-          <Route path="/farmer/dashboard" element={<FarmerDashboard />} />
-          <Route path="/farmer/products" element={<FarmerProducts />} />
-          <Route path="/farmer/orders" element={<FarmerOrders />} />
-          <Route path="/farmer/sales-history" element={<FarmerSalesHistory />} />
+          <Route path="/government" element={<Protected user={user} role="government"><GovernmentDashboard t={t} lang={lang} /></Protected>} />
+          <Route path="/government/post-demand" element={<Protected user={user} role="government"><SimpleFormPage title={t.postDemand} text={t.govtText} t={t} /></Protected>} />
+          <Route path="/government/offers" element={<Protected user={user} role="government"><FarmerBids t={t} /></Protected>} />
 
-          <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/buyer/orders" element={<BuyerOrders />} />
+          <Route path="/admin" element={<Protected user={user} role="admin"><AdminDashboard t={t} /></Protected>} />
 
-          <Route path="/government/dashboard" element={<GovernmentDashboard />} />
-          <Route path="/government/procurements/create" element={<ProcurementCreate />} />
-          <Route path="/government/procurements/manage" element={<ProcurementManage />} />
-          <Route path="/government/procurements/offers" element={<ProcurementOffers />} />
-
-          <Route path="/bids" element={<BiddingList />} />
-          <Route path="/bids/submit" element={<SubmitBid />} />
-          <Route path="/bids/history" element={<BidHistory />} />
-
-          <Route path="/admin/verification-requests" element={<AdminVerificationRequests />} />
-
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<section className="container section center"><h1>404</h1><p>Page not found</p></section>} />
         </Routes>
       </main>
-      <Footer />
-    </>
-  );
+
+      <Footer t={t} />
+    </div>
+  )
 }

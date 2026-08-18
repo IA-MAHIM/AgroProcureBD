@@ -1,16 +1,51 @@
-# AgroProcureBD 
+# AgroProcureBD Frontend
 
-1. Public Website
-2. Authentication UI
-3. Profile Management UI
-4. Farmer Module
-5. Buyer Module
-6. Government Procurement Module
-7. Bidding System
+AgroProcureBD is a simple agricultural marketplace and government procurement frontend for CSC 470.
 
-Technology
+## Included
 
-- HTML
-- CSS
-- JavaScript
-- React
+- React + Vite frontend
+- HTML, CSS, JavaScript
+- Bangla and English language toggle
+- Dark mode
+- Minimalist farmer-friendly UI
+- Public pages
+- Registration and login UI
+- Email OTP UI placeholder
+- Farmer dashboard after login
+- Buyer dashboard after login
+- Government Officer dashboard after login
+- Admin verification dashboard
+- Product listing
+- Procurement requests
+- Bidding UI
+- Checkout UI placeholder
+
+## Not included yet
+
+- Backend
+- SQL database connection
+- Real OTP email
+- Real payment
+- Real file upload storage
+
+These will be added later.
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Vercel
+
+- Framework: Vite
+- Build command: npm run build
+- Output directory: dist

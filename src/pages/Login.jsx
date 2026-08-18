@@ -1,24 +1,40 @@
-import { Link } from "react-router-dom";
-import FormField from "../components/FormField.jsx";
-import RoleNotice from "../components/RoleNotice.jsx";
+import { useNavigate } from 'react-router-dom'
 
-export default function Login() {
+export default function Login({ t, setUser }) {
+  const navigate = useNavigate()
+
+  const demoLogin = (role) => {
+    const user = { name: 'Demo User', role }
+    localStorage.setItem('agro-user', JSON.stringify(user))
+    setUser(user)
+    if (role === 'farmer') navigate('/farmer')
+    if (role === 'buyer') navigate('/buyer')
+    if (role === 'government') navigate('/government')
+    if (role === 'admin') navigate('/admin')
+  }
+
   return (
-    <section className="auth-page">
-      <img className="auth-image" src="/images/auth-otp.svg" alt="Login" />
-      <div className="auth-card">
-        <p className="eyebrow">Secure Access</p>
-        <h1>Login</h1>
-        <p>Backend authentication will be connected later. This is the frontend login UI.</p>
-        <RoleNotice>After backend connection, users will be redirected by role: Farmer, Buyer, Government Officer or Admin.</RoleNotice>
-        <FormField label="Email" type="email" placeholder="example@mail.com" />
-        <FormField label="Password" type="password" placeholder="Enter password" />
-        <button className="btn btn-primary full">Login</button>
-        <div className="form-actions">
-          <Link to="/forgot-password">Forgot password?</Link>
-          <Link to="/register/buyer">Create account</Link>
+    <section className="container section">
+      <div className="form-card narrow">
+        <p className="eyebrow">{t.login}</p>
+        <h1>{t.loginTitle}</h1>
+        <p>{t.demoLogin}</p>
+
+        <label>{t.email}</label>
+        <input type="email" placeholder="demo@example.com" />
+
+        <label>{t.password}</label>
+        <input type="password" placeholder="********" />
+
+        <button className="primary-btn full" onClick={() => demoLogin('buyer')}>{t.login}</button>
+
+        <div className="demo-grid">
+          <button onClick={() => demoLogin('farmer')}>{t.farmer}</button>
+          <button onClick={() => demoLogin('buyer')}>{t.buyer}</button>
+          <button onClick={() => demoLogin('government')}>{t.govtOfficer}</button>
+          <button onClick={() => demoLogin('admin')}>{t.admin}</button>
         </div>
       </div>
     </section>
-  );
+  )
 }
