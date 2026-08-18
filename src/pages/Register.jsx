@@ -1,66 +1,194 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { images } from '../data'
+import { apiRequest } from '../services/api'
 
 export default function Register({ t }) {
-  const [role, setRole] = useState('farmer')
   const navigate = useNavigate()
+  const text = t || {}
 
-  const submit = (e) => {
+  const [role, setRole] = useState('farmer')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const [form, setForm] = useState({
+    full_name: '',
+    email: '',
+    phone: '',
+    password: '',
+    district: '',
+    address: '',
+    employee_id: '',
+    department: '',
+    designation: '',
+    office_address: ''
+  })
+
+  const [idCard, setIdCard] = useState(null)
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    navigate('/otp')
+    setLoading(true)
+    setError('')
+
+    try {
+      if (role === 'government' && !idCard) {
+        throw new Error('Government officer ID card is required')
+      }
+
+      const formData = new FormData()
+
+      formData.append('role', role)
+      formData.append('full_name', form.full_name)
+      formData.append('email', form.email)
+      formData.append('phone', form.phone)
+      formData.append('password', form.password)
+      formData.append('district', form.district)
+      formData.append('address', form.address)
+
+      if (role === 'government') {
+        formData.append('employee_id', form.employee_id)
+        formData.append('department', form.department)
+        formData.append('designation', form.designation)
+        formData.append('office_address', form.office_address)
+        formData.append('id_card', idCard)
+      }
+
+      await apiRequest('/auth/register', {
+        method: 'POST',
+        body: formData
+      })
+
+      localStorage.setItem('pending-otp-email', form.email)
+      navigate('/otp')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <section className="container section auth-grid">
-      <div className="form-card">
-        <p className="eyebrow">{t.register}</p>
-        <h1>{t.registerTitle}</h1>
-        <form onSubmit={submit}>
-          <label>{t.role}</label>
-          <select value={role} onChange={e => setRole(e.target.value)}>
-            <option value="farmer">{t.farmer}</option>
-            <option value="buyer">{t.buyer}</option>
-            <option value="government">{t.govtOfficer}</option>
+    <section className="container section">
+      <div className="form-card narrow">
+        <p className="eyebrow">{text.register || 'Register'}</p>
+        <h1>{text.registerTitle || 'Create your account'}</h1>
+
+        {error && <p className="error-text">{error}</p>}
+
+        <form onSubmit={handleSubmit}>
+          <label>{text.role || 'Account Type'}</label>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="farmer">{text.farmer || 'Farmer'}</option>
+            <option value="buyer">{text.buyer || 'Buyer'}</option>
+            <option value="government">
+              {text.govtOfficer || 'Government Officer'}
+            </option>
           </select>
 
-          <label>{t.fullName}</label>
-          <input required placeholder={t.fullName} />
+          <label>{text.fullName || 'Full Name'}</label>
+          <input
+            name="full_name"
+            value={form.full_name}
+            onChange={handleChange}
+            required
+          />
 
-          <label>{t.email}</label>
-          <input required type="email" placeholder="name@example.com" />
+          <label>{text.email || 'Email'}</label>
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
 
-          <label>{t.phone}</label>
-          <input required placeholder="01XXXXXXXXX" />
+          <label>{text.phone || 'Phone'}</label>
+          <input
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            required
+          />
 
-          <label>{t.district}</label>
-          <input required placeholder={t.district} />
+          <label>{text.district || 'District'}</label>
+          <input
+            name="district"
+            value={form.district}
+            onChange={handleChange}
+            required
+          />
 
-          <label>{t.password}</label>
-          <input required type="password" placeholder="********" />
+          <label>{text.address || 'Address'}</label>
+          <textarea
+            name="address"
+            value={form.address}
+            onChange={handleChange}
+          />
+
+          <label>{text.password || 'Password'}</label>
+          <input
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
 
           {role === 'government' && (
-            <div className="govt-fields">
-              <p className="soft-note">{t.govtNote}</p>
-              <label>{t.employeeId}</label>
-              <input required placeholder="AG-12345" />
+            <>
+              <label>{text.employeeId || 'Employee ID'}</label>
+              <input
+                name="employee_id"
+                value={form.employee_id}
+                onChange={handleChange}
+                required
+              />
 
-              <label>{t.department}</label>
-              <input required placeholder={t.department} />
+              <label>{text.department || 'Department'}</label>
+              <input
+                name="department"
+                value={form.department}
+                onChange={handleChange}
+                required
+              />
 
-              <label>{t.designation}</label>
-              <input required placeholder={t.designation} />
+              <label>{text.designation || 'Designation'}</label>
+              <input
+                name="designation"
+                value={form.designation}
+                onChange={handleChange}
+                required
+              />
 
-              <label>{t.uploadId}</label>
-              <input type="file" accept="image/*,.pdf" />
-            </div>
+              <label>{text.officeAddress || 'Office Address'}</label>
+              <textarea
+                name="office_address"
+                value={form.office_address}
+                onChange={handleChange}
+              />
+
+              <label>{text.uploadId || 'Upload ID Card'}</label>
+              <input
+                type="file"
+                accept="image/*,.pdf"
+                onChange={(e) => setIdCard(e.target.files[0])}
+                required
+              />
+            </>
           )}
 
-          <button className="primary-btn full">{t.submit}</button>
+          <button className="primary-btn full" disabled={loading}>
+            {loading ? 'Submitting...' : text.submit || 'Submit'}
+          </button>
         </form>
       </div>
-
-      <img className="side-illustration" src={role === 'government' ? images.idUploadImage : images.registerImage} alt="Registration" />
     </section>
   )
 }
