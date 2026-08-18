@@ -100,3 +100,88 @@ export default function Login({ t, setUser }) {
     </section>
   )
 }
+
+export function AdminLogin({ t, setUser }) {
+  const navigate = useNavigate()
+  const text = t || {}
+
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  })
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      const data = await apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          role: 'admin'
+        })
+      })
+
+      localStorage.setItem('agro-token', data.token)
+      localStorage.setItem('agro-user', JSON.stringify(data.user))
+
+      if (typeof setUser === 'function') {
+        setUser(data.user)
+      }
+
+      navigate('/admin')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <section className="container section">
+      <div className="form-card narrow">
+        <p className="eyebrow">Admin Login</p>
+        <h1>{text.adminLoginTitle || 'Admin Panel Access'}</h1>
+
+        {error && <p className="error-text">{error}</p>}
+
+        <form onSubmit={handleSubmit}>
+          <label>{text.email || 'Email'}</label>
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+
+          <label>{text.password || 'Password'}</label>
+          <input
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button className="primary-btn full" disabled={loading}>
+            {loading ? 'Loading...' : 'Admin Login'}
+          </button>
+        </form>
+      </div>
+    </section>
+  )
+}
