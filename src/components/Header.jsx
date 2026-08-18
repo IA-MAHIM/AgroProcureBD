@@ -23,11 +23,11 @@ export default function Header({ t, lang, setLang, darkMode, setDarkMode, user, 
   }
 
   const navItems = [
-    ['/', t.home],
-    ['/products', t.products],
-    ['/procurement', t.procurement],
-    ['/contact', t.contact],
-  ]
+  ['/', t.home],
+  ['/products', t.products],
+  ['/procurement', t.procurement],
+  ['/contact', t.contact],
+]
 
   return (
     <header className="site-header">
