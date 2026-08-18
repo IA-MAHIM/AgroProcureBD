@@ -25,7 +25,6 @@ export default function Header({ t, lang, setLang, darkMode, setDarkMode, user, 
   const navItems = [
     ['/', t.home],
     ['/products', t.products],
-    ['/how-it-works', t.howItWorks],
     ['/procurement', t.procurement],
     ['/contact', t.contact],
   ]
