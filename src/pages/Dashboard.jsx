@@ -20,7 +20,7 @@ function DashboardShell({ roleTitle, children }) {
           <p className="eyebrow">{roleTitle}</p>
           <h1>Welcome{user?.full_name ? `, ${user.full_name}` : ''}</h1>
           <p className="text-muted">
-            Clean dashboard. No demo data or fake order history is shown.
+           
           </p>
         </div>
       </div>
