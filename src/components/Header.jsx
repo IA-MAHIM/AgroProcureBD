@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Menu, X, Moon, Sun } from 'lucide-react'
+import { Menu, X, Moon, Sun, LogOut, LayoutDashboard } from 'lucide-react'
 import { useState } from 'react'
 import logo from '../assets/logo.svg'
 
@@ -11,11 +11,33 @@ function roleDashboardPath(role) {
   return '/'
 }
 
-export default function Header({ t, lang, setLang, darkMode, setDarkMode, user, setUser }) {
+export default function Header({
+  t,
+  lang,
+  setLang,
+  darkMode,
+  setDarkMode,
+  user,
+  setUser
+}) {
+  const text = t || {}
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
 
+  const closeMenu = () => {
+    setOpen(false)
+  }
+
+  const toggleLanguage = () => {
+    setLang(lang === 'en' ? 'bn' : 'en')
+  }
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+  }
+
   const logout = () => {
+    localStorage.removeItem('agro-token')
     localStorage.removeItem('agro-user')
     setUser(null)
     setOpen(false)
@@ -23,69 +45,130 @@ export default function Header({ t, lang, setLang, darkMode, setDarkMode, user, 
   }
 
   const navItems = [
-    ['/', t.home],
-    ['/products', t.products],
-    ['/how-it-works', t.howItWorks],
-    ['/procurement', t.procurement],
-    ['/contact', t.contact],
+    ['/', text.home || 'Home'],
+    ['/products', text.products || 'Products'],
+    ['/procurement', text.procurement || 'Procurement'],
+    ['/contact', text.contact || 'Contact']
   ]
 
   return (
     <header className="site-header">
-      <div className="container nav-wrap">
-        <Link className="brand" to="/">
+      <div className="container header-inner">
+        <Link className="brand" to="/" onClick={closeMenu}>
           <img src={logo} alt="AgroProcureBD logo" />
-          <span>{t.brand}</span>
+          <span>{text.brand || 'AgroProcureBD'}</span>
         </Link>
 
-        <nav className={open ? 'main-nav open' : 'main-nav'}>
+        <nav className={open ? 'nav-links nav-open' : 'nav-links'}>
           {navItems.map(([path, label]) => (
-            <NavLink key={path} to={path} onClick={() => setOpen(false)}>
+            <NavLink
+              key={path}
+              to={path}
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
               {label}
             </NavLink>
           ))}
 
           {user && (
-            <NavLink className="dashboard-link" to={roleDashboardPath(user.role)} onClick={() => setOpen(false)}>
-              {t.dashboard}
+            <NavLink
+              to={roleDashboardPath(user.role)}
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+              {text.dashboard || 'Dashboard'}
             </NavLink>
           )}
         </nav>
 
         <div className="header-actions">
-          <button className="small-btn" onClick={() => setLang(lang === 'en' ? 'bn' : 'en')} aria-label="Change language">
-            {t.language}
+          <button
+            type="button"
+            className="ghost-btn header-small-btn"
+            onClick={toggleLanguage}
+          >
+            {lang === 'en' ? 'বাংলা' : 'EN'}
           </button>
 
-          <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Toggle dark mode">
-            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-            <span>{darkMode ? t.light : t.dark}</span>
+          <button
+            type="button"
+            className="ghost-btn header-small-btn"
+            onClick={toggleDarkMode}
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+            <span>{darkMode ? text.light || 'Light' : text.dark || 'Dark'}</span>
           </button>
 
           {!user ? (
             <>
-              <Link className="login-btn hide-sm" to="/login">{t.login}</Link>
-              <Link className="primary-btn hide-sm" to="/register">{t.register}</Link>
+              <Link className="ghost-btn header-auth hide-mobile" to="/login">
+                {text.login || 'Login'}
+              </Link>
+
+              <Link className="primary-btn header-auth hide-mobile" to="/register">
+                {text.register || 'Register'}
+              </Link>
             </>
           ) : (
-            <button className="login-btn hide-sm" onClick={logout}>{t.logout}</button>
+            <>
+              <Link
+                className="ghost-btn header-auth hide-mobile"
+                to={roleDashboardPath(user.role)}
+              >
+                <LayoutDashboard size={17} />
+                {text.dashboard || 'Dashboard'}
+              </Link>
+
+              <button
+                type="button"
+                className="ghost-btn header-auth hide-mobile"
+                onClick={logout}
+              >
+                <LogOut size={17} />
+                {text.logout || 'Logout'}
+              </button>
+            </>
           )}
 
-          <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Open menu">
+          <button
+            type="button"
+            className="ghost-btn menu-btn"
+            onClick={() => setOpen(!open)}
+            aria-label="Open menu"
+          >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
       {open && (
-        <div className="mobile-auth container">
+        <div className="container mobile-header-actions">
           {!user ? (
             <>
-              <Link className="login-btn" to="/login" onClick={() => setOpen(false)}>{t.login}</Link>
-              <Link className="primary-btn" to="/register" onClick={() => setOpen(false)}>{t.register}</Link>
+              <Link className="ghost-btn full" to="/login" onClick={closeMenu}>
+                {text.login || 'Login'}
+              </Link>
+
+              <Link className="primary-btn full" to="/register" onClick={closeMenu}>
+                {text.register || 'Register'}
+              </Link>
             </>
           ) : (
-            <button className="login-btn" onClick={logout}>{t.logout}</button>
+            <>
+              <Link
+                className="ghost-btn full"
+                to={roleDashboardPath(user.role)}
+                onClick={closeMenu}
+              >
+                {text.dashboard || 'Dashboard'}
+              </Link>
+
+              <button type="button" className="ghost-btn full" onClick={logout}>
+                {text.logout || 'Logout'}
+              </button>
+            </>
           )}
         </div>
       )}
