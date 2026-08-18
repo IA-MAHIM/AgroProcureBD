@@ -170,10 +170,10 @@ export function Checkout({ t }) {
     <section className="container section">
       <div className="form-card narrow">
         <h1>{t.checkout}</h1>
-        <p>{t.paymentLater}</p>
+        <label>{t.paymentMethod}</label><select><option>{t.cashOnDelivery}</option><option>{t.manualPayment}</option></select>
         <label>{t.fullName}</label><input placeholder={t.fullName} />
         <label>{t.phone}</label><input placeholder={t.phone} />
-        <label>Address</label><textarea rows="4" />
+        <label>{t.shippingAddress}</label><textarea rows="4" />
         <button className="primary-btn full">{t.placeOrder}</button>
       </div>
     </section>

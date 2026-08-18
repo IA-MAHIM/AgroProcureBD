@@ -404,22 +404,34 @@ textarea {
   background: var(--brand-light);
 }
 
-.demo-grid {
+.role-select {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: 12px;
 }
 
-.demo-grid button,
+.role-option,
 .mini {
-  min-height: 40px;
-  border-radius: 12px;
+  min-height: 46px;
+  border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--panel);
   color: var(--text);
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 750;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  text-align: left;
+}
+
+.role-option.active {
+  border-color: var(--brand);
+  background: var(--brand-light);
+  color: var(--brand-dark);
 }
 
 .otp-row {

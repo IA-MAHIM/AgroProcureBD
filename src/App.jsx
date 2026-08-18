@@ -9,7 +9,7 @@ import HowItWorks from './pages/HowItWorks'
 import Procurement from './pages/Procurement'
 import Contact from './pages/Contact'
 import Register from './pages/Register'
-import Login from './pages/Login'
+import Login, { AdminLogin } from './pages/Login'
 import Otp from './pages/Otp'
 import {
   FarmerDashboard,
@@ -72,6 +72,7 @@ export default function App() {
           <Route path="/contact" element={<Contact t={t} />} />
           <Route path="/register" element={<Register t={t} />} />
           <Route path="/login" element={<Login t={t} setUser={setUser} />} />
+          <Route path="/admin-login" element={<AdminLogin t={t} setUser={setUser} />} />
           <Route path="/otp" element={<Otp t={t} />} />
 
           <Route path="/farmer" element={<Protected user={user} role="farmer"><FarmerDashboard t={t} lang={lang} /></Protected>} />

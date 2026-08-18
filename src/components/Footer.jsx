@@ -12,12 +12,12 @@ export default function Footer({ t }) {
           <p>{t.footer}</p>
         </div>
         <div>
-          <strong>Project</strong>
-          <p>{t.backendLater}</p>
+          <strong>{t.project}</strong>
+          <p>{t.projectText}</p>
         </div>
         <div>
-          <strong>Contact</strong>
-          <p>agroprocurebd@example.com</p>
+          <strong>{t.contact}</strong>
+          <p>support@agroprocurebd.com</p>
         </div>
       </div>
     </footer>
