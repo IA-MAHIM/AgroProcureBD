@@ -8,8 +8,11 @@ function Register({ t }) {
 
   const [role, setRole] = useState('buyer')
   const [loading, setLoading] = useState(false)
+  const [otpMode, setOtpMode] = useState(false)
+  const [otpLoading, setOtpLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [otp, setOtp] = useState('')
 
   const [form, setForm] = useState({
     full_name: '',
@@ -33,12 +36,6 @@ function Register({ t }) {
     })
   }
 
-  const handleRoleChange = (e) => {
-    setRole(e.target.value)
-    setError('')
-    setSuccess('')
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -46,19 +43,6 @@ function Register({ t }) {
     setSuccess('')
 
     try {
-      if (!form.full_name) throw new Error('Full name is required')
-      if (!form.email) throw new Error('Email is required')
-      if (!form.phone) throw new Error('Phone is required')
-      if (!form.password) throw new Error('Password is required')
-      if (!form.district) throw new Error('District is required')
-
-      if (role === 'government') {
-        if (!form.employee_id) throw new Error('Employee ID is required')
-        if (!form.department) throw new Error('Department is required')
-        if (!form.designation) throw new Error('Designation is required')
-        if (!idCard) throw new Error('Government officer ID card is required')
-      }
-
       const formData = new FormData()
 
       formData.append('role', role)
@@ -70,6 +54,10 @@ function Register({ t }) {
       formData.append('address', form.address || '')
 
       if (role === 'government') {
+        if (!idCard) {
+          throw new Error('Government officer ID card is required')
+        }
+
         formData.append('employee_id', form.employee_id)
         formData.append('department', form.department)
         formData.append('designation', form.designation)
@@ -83,12 +71,71 @@ function Register({ t }) {
       })
 
       localStorage.setItem('pending-otp-email', form.email)
-navigate('/otp', { replace: true })
+      setSuccess('Registration successful. Enter OTP below.')
+      setOtpMode(true)
     } catch (err) {
       setError(err.message || 'Registration failed')
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault()
+    setOtpLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      await apiRequest('/auth/verify-otp', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: form.email,
+          otp
+        })
+      })
+
+      localStorage.removeItem('pending-otp-email')
+      setSuccess('Email verified successfully. Redirecting to login...')
+
+      setTimeout(() => {
+        navigate('/login')
+      }, 1000)
+    } catch (err) {
+      setError(err.message || 'OTP verification failed')
+    } finally {
+      setOtpLoading(false)
+    }
+  }
+
+  if (otpMode) {
+    return (
+      <section className="container section">
+        <div className="form-card narrow">
+          <p className="eyebrow">OTP Verification</p>
+          <h1>Verify your email</h1>
+
+          {error && <p className="error-text">{error}</p>}
+          {success && <p className="success-text">{success}</p>}
+
+          <p>OTP sent for: {form.email}</p>
+
+          <form onSubmit={handleOtpSubmit}>
+            <label>Enter OTP</label>
+            <input
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              maxLength="6"
+              required
+            />
+
+            <button className="primary-btn full" disabled={otpLoading}>
+              {otpLoading ? 'Verifying...' : 'Verify OTP'}
+            </button>
+          </form>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -102,7 +149,7 @@ navigate('/otp', { replace: true })
 
         <form onSubmit={handleSubmit}>
           <label>{text.role || 'Account Type'}</label>
-          <select value={role} onChange={handleRoleChange}>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="buyer">{text.buyer || 'Buyer'}</option>
             <option value="farmer">{text.farmer || 'Farmer'}</option>
             <option value="government">
