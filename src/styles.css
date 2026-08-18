@@ -973,4 +973,98 @@ tr:last-child td {
   .site-footer {
     padding: 48px 0 24px;
   }
+  /* =========================
+   Header spacing + Footer logo fix
+========================= */
+
+/* Space between AgroProcureBD name and Home button */
+.site-header .brand,
+.header .brand,
+.site-header .logo,
+.header .logo {
+  margin-right: 38px;
 }
+
+.site-header .nav-links,
+.site-header .nav,
+.header .nav-links,
+.header .nav {
+  margin-left: 20px;
+}
+
+/* Footer logo make small */
+.site-footer img,
+.footer img,
+.site-footer .footer-brand img,
+.footer .footer-brand img,
+.site-footer .brand img,
+.footer .brand img,
+.site-footer .logo img,
+.footer .logo img {
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  object-fit: contain !important;
+  border-radius: 16px !important;
+  padding: 6px !important;
+  background: #ffffff !important;
+}
+
+/* Footer brand layout cleaner */
+.footer-brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-brand,
+.site-footer .brand,
+.site-footer .logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 18px !important;
+  font-size: 24px !important;
+  font-weight: 950 !important;
+}
+
+/* Keep footer other sections a little lower */
+.footer-column {
+  padding-top: 34px;
+}
+
+/* Better footer spacing */
+.footer-grid {
+  align-items: flex-start !important;
+  gap: 56px !important;
+}
+
+.footer-brand-block p {
+  max-width: 430px;
+}
+
+/* Mobile fix */
+@media (max-width: 980px) {
+  .site-header .brand,
+  .header .brand,
+  .site-header .logo,
+  .header .logo {
+    margin-right: 0;
+  }
+
+  .site-header .nav-links,
+  .site-header .nav,
+  .header .nav-links,
+  .header .nav {
+    margin-left: 0;
+  }
+
+  .footer-column {
+    padding-top: 0;
+  }
+
+  .footer-grid {
+    gap: 30px !important;
+  }
+}
+
