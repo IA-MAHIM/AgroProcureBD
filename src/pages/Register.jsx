@@ -83,11 +83,7 @@ function Register({ t }) {
       })
 
       localStorage.setItem('pending-otp-email', form.email)
-      setSuccess('Registration successful. Redirecting to OTP page...')
-
-      setTimeout(() => {
-        navigate('/otp')
-      }, 1000)
+window.location.href = '/otp'
     } catch (err) {
       setError(err.message || 'Registration failed')
     } finally {
