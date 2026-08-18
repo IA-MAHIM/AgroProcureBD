@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { apiRequest } from '../services/api'
 
-export default function Register({ t }) {
+function Register({ t }) {
   const navigate = useNavigate()
   const text = t || {}
 
-  const [role, setRole] = useState('farmer')
+  const [role, setRole] = useState('buyer')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   const [form, setForm] = useState({
     full_name: '',
@@ -32,14 +33,30 @@ export default function Register({ t }) {
     })
   }
 
+  const handleRoleChange = (e) => {
+    setRole(e.target.value)
+    setError('')
+    setSuccess('')
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setSuccess('')
 
     try {
-      if (role === 'government' && !idCard) {
-        throw new Error('Government officer ID card is required')
+      if (!form.full_name) throw new Error('Full name is required')
+      if (!form.email) throw new Error('Email is required')
+      if (!form.phone) throw new Error('Phone is required')
+      if (!form.password) throw new Error('Password is required')
+      if (!form.district) throw new Error('District is required')
+
+      if (role === 'government') {
+        if (!form.employee_id) throw new Error('Employee ID is required')
+        if (!form.department) throw new Error('Department is required')
+        if (!form.designation) throw new Error('Designation is required')
+        if (!idCard) throw new Error('Government officer ID card is required')
       }
 
       const formData = new FormData()
@@ -50,13 +67,13 @@ export default function Register({ t }) {
       formData.append('phone', form.phone)
       formData.append('password', form.password)
       formData.append('district', form.district)
-      formData.append('address', form.address)
+      formData.append('address', form.address || '')
 
       if (role === 'government') {
         formData.append('employee_id', form.employee_id)
         formData.append('department', form.department)
         formData.append('designation', form.designation)
-        formData.append('office_address', form.office_address)
+        formData.append('office_address', form.office_address || '')
         formData.append('id_card', idCard)
       }
 
@@ -66,9 +83,13 @@ export default function Register({ t }) {
       })
 
       localStorage.setItem('pending-otp-email', form.email)
-      navigate('/otp')
+      setSuccess('Registration successful. Redirecting to OTP page...')
+
+      setTimeout(() => {
+        navigate('/otp')
+      }, 1000)
     } catch (err) {
-      setError(err.message)
+      setError(err.message || 'Registration failed')
     } finally {
       setLoading(false)
     }
@@ -81,12 +102,13 @@ export default function Register({ t }) {
         <h1>{text.registerTitle || 'Create your account'}</h1>
 
         {error && <p className="error-text">{error}</p>}
+        {success && <p className="success-text">{success}</p>}
 
         <form onSubmit={handleSubmit}>
           <label>{text.role || 'Account Type'}</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="farmer">{text.farmer || 'Farmer'}</option>
+          <select value={role} onChange={handleRoleChange}>
             <option value="buyer">{text.buyer || 'Buyer'}</option>
+            <option value="farmer">{text.farmer || 'Farmer'}</option>
             <option value="government">
               {text.govtOfficer || 'Government Officer'}
             </option>
@@ -192,3 +214,6 @@ export default function Register({ t }) {
     </section>
   )
 }
+
+export default Register
+export { Register }
