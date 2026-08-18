@@ -1,9 +1,0 @@
-<svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="220" height="220" rx="48" fill="#F0FDF4"/>
-  <circle cx="110" cy="110" r="82" fill="#DCFCE7"/>
-  <path d="M57 127C81 119 98 103 106 73C128 82 148 101 160 129C127 137 91 139 57 127Z" fill="#16A34A"/>
-  <path d="M78 140C96 111 119 91 150 82" stroke="#14532D" stroke-width="10" stroke-linecap="round"/>
-  <path d="M67 153H154C164 153 172 161 172 171V178H49V171C49 161 57 153 67 153Z" fill="#86EFAC"/>
-  <path d="M67 153H154" stroke="#14532D" stroke-width="8" stroke-linecap="round"/>
-  <text x="110" y="202" font-family="Arial, sans-serif" font-size="19" fill="#14532D" font-weight="700" text-anchor="middle">AgroProcureBD</text>
-</svg>
