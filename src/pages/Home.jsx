@@ -1,5 +1,11 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle2, Sprout, ShoppingBasket, Landmark, ShieldCheck } from 'lucide-react'
+import {
+  ArrowRight,
+  Sprout,
+  ShoppingBasket,
+  Landmark,
+  ShieldCheck,
+} from 'lucide-react'
 import { images } from '../data'
 import { Card } from '../components/Card'
 
@@ -13,37 +19,49 @@ export default function Home({ t }) {
 
   return (
     <>
+      {/* Hero Section */}
       <section className="hero">
         <div className="container hero-grid">
           <div className="hero-text">
             <p className="eyebrow">{t.simpleWords}</p>
+
             <h1>{t.heroTitle}</h1>
+
             <p>{t.heroText}</p>
+
             <div className="hero-actions">
-  <Link className="primary-btn" to="/register">
-    Get started
-  </Link>
+              <Link className="primary-btn" to="/register">
+                Get Started
+                <ArrowRight size={18} />
+              </Link>
 
-  <Link className="outline-btn" to="/products">
-    Browse products
-  </Link>
+              <Link className="outline-btn" to="/products">
+                Browse Products
+              </Link>
 
-  <Link className="ghost-btn" to="/procurement">
-    Government Procurement
-  </Link>
-</div>
+              <Link className="ghost-btn" to="/procurement">
+                Government Procurement
+              </Link>
             </div>
+
             <p className="soft-note">{t.dashboardOnly}</p>
           </div>
-          <img className="hero-img" src={images.heroFarm} alt="Farm illustration" />
+
+          <img
+            className="hero-img"
+            src={images.heroFarm}
+            alt="Farm illustration"
+          />
         </div>
       </section>
 
+      {/* Features */}
       <section className="container section">
         <div className="section-head">
           <p className="eyebrow">{t.easyRead}</p>
           <h2>{t.howItWorks}</h2>
         </div>
+
         <div className="feature-grid">
           {steps.map(([Icon, title, text]) => (
             <Card key={title}>
@@ -55,12 +73,16 @@ export default function Home({ t }) {
         </div>
       </section>
 
+      {/* Government Procurement */}
       <section className="container info-banner">
         <div>
           <h2>{t.procurement}</h2>
           <p>{t.govtText}</p>
         </div>
-        <Link className="primary-btn" to="/procurement">{t.viewOffers}</Link>
+
+        <Link className="primary-btn" to="/procurement">
+          {t.viewOffers}
+        </Link>
       </section>
     </>
   )
