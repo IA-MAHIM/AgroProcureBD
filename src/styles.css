@@ -1066,24 +1066,28 @@ tr:last-child td {
   .footer-grid {
     gap: 30px !important;
   }
-  .hero-third-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 30px;
-    border-radius: 999px;
+  .hero-third-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
 
-    background: red !important;
-    color: white !important;
+    padding:12px 24px;
 
-    font-weight: 700;
-    text-decoration: none;
+    background:red;
 
-    transition: .3s;
+    color:white;
+
+    border-radius:999px;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    transition:.3s;
 }
 
 .hero-third-btn:hover{
-    background: darkred !important;
+    background:darkred;
 }
 }
 
