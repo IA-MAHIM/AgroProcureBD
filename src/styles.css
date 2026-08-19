@@ -1066,56 +1066,7 @@ tr:last-child td {
   .footer-grid {
     gap: 30px !important;
   }
-  .hero-third-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
+ 
 
-    padding:12px 24px;
-
-    background:red;
-
-    color:white;
-
-    border-radius:999px;
-
-    text-decoration:none;
-
-    font-weight:700;
-
-    transition:.3s;
-}
-
-.hero-third-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    min-height: 56px;
-    padding: 0 28px;
-
-    background: #2563eb;
-    color: #ffffff !important;
-
-    border: 2px solid #2563eb;
-    border-radius: 999px;
-
-    font-size: 16px;
-    font-weight: 700;
-
-    text-decoration: none;
-
-    cursor: pointer;
-
-    transition: all 0.3s ease;
-}
-
-.hero-third-btn:hover {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
-    color: #ffffff !important;
-    transform: translateY(-2px);
-}
 }
 
