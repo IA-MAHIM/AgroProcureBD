@@ -1072,7 +1072,7 @@ tr:last-child td {
     justify-content: center;
     padding: 14px 30px;
     border-radius: 999px;
-    background: #2563eb;
+    background: red;
     color: white;
     font-weight: 700;
     text-decoration: none;
@@ -1080,7 +1080,7 @@ tr:last-child td {
 }
 
 .hero-third-btn:hover {
-    background: #1d4ed8;
+    background: blue;
     transform: translateY(-2px);
 }
 }
