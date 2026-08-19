@@ -20,10 +20,18 @@ export default function Home({ t }) {
             <h1>{t.heroTitle}</h1>
             <p>{t.heroText}</p>
             <div className="hero-actions">
-              <Link className="primary-btn big" to="/register">
-                {t.getStarted} <ArrowRight size={18} />
-              </Link>
-              <Link className="outline-btn big" to="/products">{t.browse}</Link>
+  <Link className="primary-btn" to="/register">
+    Get started
+  </Link>
+
+  <Link className="outline-btn" to="/products">
+    Browse products
+  </Link>
+
+  <Link className="ghost-btn" to="/procurement">
+    Government Procurement
+  </Link>
+</div>
             </div>
             <p className="soft-note">{t.dashboardOnly}</p>
           </div>
