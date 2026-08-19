@@ -39,7 +39,7 @@ export default function Home({ t }) {
                 Browse Products
               </Link>
 
-              <Link className="ghost-btn" to="/procurement">
+              <Link className="hero-third-btn" to="/procurement">
                 New Button
               </Link>
             </div>
