@@ -54,6 +54,7 @@ export default function Header({
   return (
     <header className="site-header">
       <div className="container header-inner">
+
         <Link className="brand" to="/" onClick={closeMenu}>
           <img src={logo} alt="AgroProcureBD logo" />
           <span>{text.brand || 'AgroProcureBD'}</span>
@@ -83,6 +84,8 @@ export default function Header({
         </nav>
 
         <div className="header-actions">
+
+          {/* Language Button */}
           <button
             type="button"
             className="ghost-btn header-small-btn"
@@ -91,6 +94,7 @@ export default function Header({
             {lang === 'en' ? 'বাংলা' : 'EN'}
           </button>
 
+          {/* Dark Mode Button */}
           <button
             type="button"
             className="ghost-btn header-small-btn"
@@ -98,21 +102,40 @@ export default function Header({
             aria-label="Toggle dark mode"
           >
             {darkMode ? <Sun size={17} /> : <Moon size={17} />}
-            <span>{darkMode ? text.light || 'Light' : text.dark || 'Dark'}</span>
+            <span>
+              {darkMode ? text.light || 'Light' : text.dark || 'Dark'}
+            </span>
           </button>
 
           {!user ? (
             <>
-              <Link className="ghost-btn header-auth hide-mobile" to="/login">
+              {/* Login Button */}
+              <Link
+                className="ghost-btn header-auth hide-mobile"
+                to="/login"
+              >
                 {text.login || 'Login'}
               </Link>
 
-              <Link className="primary-btn header-auth hide-mobile" to="/register">
+              {/* Sabbir Button */}
+              <Link
+                className="ghost-btn header-auth hide-mobile"
+                to="/sabbir"
+              >
+                Sabbir
+              </Link>
+
+              {/* Register Button */}
+              <Link
+                className="primary-btn header-auth hide-mobile"
+                to="/register"
+              >
                 {text.register || 'Register'}
               </Link>
             </>
           ) : (
             <>
+              {/* Dashboard Button */}
               <Link
                 className="ghost-btn header-auth hide-mobile"
                 to={roleDashboardPath(user.role)}
@@ -121,6 +144,7 @@ export default function Header({
                 {text.dashboard || 'Dashboard'}
               </Link>
 
+              {/* Logout Button */}
               <button
                 type="button"
                 className="ghost-btn header-auth hide-mobile"
@@ -132,6 +156,7 @@ export default function Header({
             </>
           )}
 
+          {/* Mobile Menu Button */}
           <button
             type="button"
             className="ghost-btn menu-btn"
@@ -143,20 +168,42 @@ export default function Header({
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {open && (
         <div className="container mobile-header-actions">
+
           {!user ? (
             <>
-              <Link className="ghost-btn full" to="/login" onClick={closeMenu}>
+              {/* Mobile Login */}
+              <Link
+                className="ghost-btn full"
+                to="/login"
+                onClick={closeMenu}
+              >
                 {text.login || 'Login'}
               </Link>
 
-              <Link className="primary-btn full" to="/register" onClick={closeMenu}>
+              {/* Mobile Sabbir */}
+              <Link
+                className="ghost-btn full"
+                to="/sabbir"
+                onClick={closeMenu}
+              >
+                Sabbir
+              </Link>
+
+              {/* Mobile Register */}
+              <Link
+                className="primary-btn full"
+                to="/register"
+                onClick={closeMenu}
+              >
                 {text.register || 'Register'}
               </Link>
             </>
           ) : (
             <>
+              {/* Mobile Dashboard */}
               <Link
                 className="ghost-btn full"
                 to={roleDashboardPath(user.role)}
@@ -165,11 +212,17 @@ export default function Header({
                 {text.dashboard || 'Dashboard'}
               </Link>
 
-              <button type="button" className="ghost-btn full" onClick={logout}>
+              {/* Mobile Logout */}
+              <button
+                type="button"
+                className="ghost-btn full"
+                onClick={logout}
+              >
                 {text.logout || 'Logout'}
               </button>
             </>
           )}
+
         </div>
       )}
     </header>
