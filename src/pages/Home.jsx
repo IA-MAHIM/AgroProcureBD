@@ -40,7 +40,7 @@ export default function Home({ t }) {
               </Link>
 
               <Link className="ghost-btn" to="/procurement">
-                Government Procurement
+                New Button
               </Link>
             </div>
 
